@@ -1,5 +1,7 @@
 import { useState,useCallback, useEffect,useRef } from 'react'
 import './App.css'
+import toastr from 'toastr'
+import "toastr/build/toastr.min.css";
 
 function App() {
   const [length,setLength] = useState(8)
@@ -28,11 +30,22 @@ function App() {
   const copyPasswordToClipBoard = useCallback(() => {
     passwordRef.current?.select()
     passwordRef.current?.setSelectionRange(0,length)
-    window.navigator.clipboard.writeText(Password).then(() => {
-      alert("Password copied to clipboard !!!")
-    }).catch((err) => {
-        throw new Error(err,)
+    window.navigator.clipboard.writeText(Password)
+    .then(() => {
+      toastr.success("Password copied to clipboard!", "Success", {
+        closeButton: true,
+        progressBar: true,
+        positionClass: "toast-top-center",
+      });
     })
+    .catch((err) => {
+      toastr.error("Failed to copy password!", "Error", {
+        closeButton: true,
+        progressBar: true,
+        positionClass: "toast-top-center",
+      });
+      throw new Error(err);
+    });
   }, 
   [Password])
 
